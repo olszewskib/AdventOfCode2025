@@ -14,7 +14,7 @@ def overlap(lower: str, upper: str) -> tuple[bool,Optional[str]]:
     r = upper.split("-")
 
     if int(l[1]) >= int(r[0]):
-        return (True,f"{l[0]}-{r[1]}")
+        return (True,f"{l[0]}-{max(l[1],r[1])}")
 
     return (False, None)
 
