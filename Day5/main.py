@@ -42,6 +42,15 @@ def part1(ranges: list[str], ids: list[str]) -> int:
 
     return result
 
+def part2(ranges: list[str]) -> int:
+    result = 0
+    for r in ranges:
+        lower, upper = r.split("-")
+        result += int(upper) - int(lower) + 1
+
+    return result
+
+
 def main():
     ranges = read_file('./ranges.txt').splitlines()
     ids = read_file('./ids.txt').splitlines()
@@ -69,6 +78,7 @@ def main():
     
 
     print("Part 1:", part1(ranges_merged, ids))
+    print("Part 2:", part2(ranges_merged))
 
 
 
