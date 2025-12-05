@@ -26,6 +26,22 @@ def includes(r: str, x: str) -> bool:
 
     return False
 
+def part1(ranges: list[str], ids: list[str]) -> int:
+    result = 0
+    for id in ids:
+        index = bisect_left(ranges, int(id), key=lower_bound) - 1
+
+        if index < 0:
+            continue
+
+        if includes(ranges[index],id):
+            result += 1
+
+        if index != (len(ranges) - 1) and includes(ranges[index+1],id):
+            result += 1
+
+    return result
+
 def main():
     ranges = read_file('./ranges.txt').splitlines()
     ids = read_file('./ids.txt').splitlines()
@@ -52,20 +68,8 @@ def main():
         ranges_merged.append(upper)
     
 
-    result = 0
-    for id in ids:
-        index = bisect_left(ranges_merged, int(id), key=lower_bound) - 1
+    print("Part 1:", part1(ranges_merged, ids))
 
-        if index < 0:
-            continue
-
-        if includes(ranges_merged[index],id):
-            result += 1
-
-        if index != (len(ranges_merged) - 1) and includes(ranges_merged[index+1],id):
-            result += 1
-
-    print(result)
 
 
 if __name__ == "__main__":
