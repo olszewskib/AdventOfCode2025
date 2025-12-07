@@ -34,45 +34,39 @@ def get_beams(data: list[str]) -> tuple[list[list[str]],int]:
 def main():
     data = read_file('./test.txt').splitlines()
 
-    beams, splits = get_beams(data)
-
-    print(f"Part1: {splits}")
-
-    for b in beams:
-        print("".join(b))
-
-    s = (1, data[0].index("S"))
-
     q = deque()
-    q.appendleft(s)
-
+    q.append(f"{data[0].index("S")}-{data[0].index("S")}")
+    
+    paths = set()
     h = len(data)
-    visited = set()
-    paths = 0
+
+    realities = 0
     while len(q) > 0:
-        v = q.pop()
-        i, j = v
+        p = q.pop()
 
-        if v in visited:
-            paths -= 2
+        if p in paths:
             continue
+        else:
+            paths.add(p)
 
-        print(f"({i},{j})")
-        visited.add(v)
+        path = p.split("-")
+        i, j = len(path) - 1, int(path[-1])
 
         while i < h:
             i += 1
 
             if i == h:
+                realities += 1
                 break
 
             if data[i][j] == "^":
-                q.appendleft((i, j-1))
-                q.appendleft((i, j+1))
-                paths *= 2
+                q.appendleft(p + "-" + str(j+1))
+                q.appendleft(p + "-" + str(j-1))
                 break
+            else:
+                p = p + "-" + str(j)
 
-    print(paths)
+    print(realities)
 
 
 
