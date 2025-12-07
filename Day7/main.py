@@ -32,44 +32,27 @@ def get_beams(data: list[str]) -> tuple[list[list[str]],int]:
     return (beams,splits)
 
 def main():
-    data = read_file('./test.txt').splitlines()
+    data = read_file('./input.txt').splitlines()
 
-    q = deque()
-    q.append(f"{data[0].index("S")}-{data[0].index("S")}")
-    
-    paths = set()
-    h = len(data)
+    beams, splits = get_beams(data)
 
-    realities = 0
-    while len(q) > 0:
-        p = q.pop()
+    dp = [[0] * len(data[0]) for _ in range(len(data))]
 
-        if p in paths:
-            continue
-        else:
-            paths.add(p)
+    dp[0][data[0].index("S")] = 1
 
-        path = p.split("-")
-        i, j = len(path) - 1, int(path[-1])
+    for i in range(1, len(data)):
+        for j in range(len(data[0])):
 
-        while i < h:
-            i += 1
+            if beams[i][j] == "^":
+                dp[i][j-1] += dp[i-1][j]
+                dp[i][j+1] += dp[i-1][j]
+            elif beams[i][j] == "|":
+                dp[i][j] += dp[i-1][j]
 
-            if i == h:
-                realities += 1
-                break
+    realities = sum(dp[-1])
 
-            if data[i][j] == "^":
-                q.appendleft(p + "-" + str(j+1))
-                q.appendleft(p + "-" + str(j-1))
-                break
-            else:
-                p = p + "-" + str(j)
-
-    print(realities)
-
-
-
+    print(f"Part1: {splits}")
+    print(f"Part2: {realities}")
 
 
 if __name__ == "__main__":
