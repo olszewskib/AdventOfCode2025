@@ -32,7 +32,7 @@ class DSU:
 
         return self.parent[v]
 
-    def union(self, x, y):
+    def union(self, x, y) -> bool:
         s1 = self.find(x)
         s2 = self.find(y)
 
@@ -44,23 +44,27 @@ class DSU:
             else:
                 self.parent[s2] = s1
                 self.rank[s1] += 1
+            return True
 
+        return False
 
-CIRCUITS_LIMIT = 1000
+# aka MST
+def part2(edges) -> int:
+    dsu = DSU()
 
-def main():
-    data = read_file('./input.txt').splitlines()
+    last_connection = (",,,",",,,")
+    for e in edges:
+        _, v, u = e
+        if dsu.union(v, u):
+            last_connection = (u,v)
 
-    boxes = []
-    for i in range(len(data)):
-        p1 = data[i]
-        for j in range(i + 1, len(data)):
-            p2 = data[j]
+    x1 = int(last_connection[0].split(",")[0])
+    x2 = int(last_connection[1].split(",")[0])
 
-            distance = norm(p1, p2)
-            boxes.append((distance, p1, p2))
-    boxes.sort()
+    return x1 * x2
 
+def part1(boxes) -> int:
+    CIRCUITS_LIMIT = 1000
     dsu = DSU()
 
     for b in boxes[:CIRCUITS_LIMIT]:
@@ -78,7 +82,25 @@ def main():
 
     lens = [v for _, v in circuits.items()]
     lens.sort()
-    print(math.prod(lens[-3:]))
+    return math.prod(lens[-3:])
+
+def main():
+    data = read_file('./input.txt').splitlines()
+
+    boxes = []
+    for i in range(len(data)):
+        p1 = data[i]
+        for j in range(i + 1, len(data)):
+            p2 = data[j]
+
+            distance = norm(p1, p2)
+            boxes.append((distance, p1, p2))
+    boxes.sort()
+
+    print(part2(boxes))
+
+    return
+
 
 
 if __name__ == "__main__":
